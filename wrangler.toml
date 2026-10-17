@@ -1,0 +1,27 @@
+name = "ai-infra-radar"
+main = "src/index.ts"
+compatibility_date = "2025-01-15"
+
+# 每 30 分钟抓取 + 处理；每天 UTC 00:00（北京时间 08:00）出日报，周一顺带出周报
+[triggers]
+crons = ["*/30 * * * *", "0 0 * * *"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "ai-infra-radar"
+database_id = "<执行 npx wrangler d1 create ai-infra-radar 后填入>"
+
+[vars]
+SITE_NAME = "AI Infra 雷达"
+SITE_URL = ""            # 绑定域名后填，例如 https://radar.example.com
+GLM_MODEL = "glm-4.6"
+MIN_SCORE = "60"
+BATCH_SIZE = "30"
+AUTO_POST = "false"      # 改成 "true"：日报第一条推文、周报 thread 自动发到 X
+
+# 用 secret 设置（不要写在这里）：
+# npx wrangler secret put GLM_API_KEY
+# npx wrangler secret put RUN_TOKEN
+# npx wrangler secret put TELEGRAM_BOT_TOKEN
+# npx wrangler secret put TELEGRAM_CHAT_ID
+# 自动发推时再加：X_API_KEY / X_API_SECRET / X_ACCESS_TOKEN / X_ACCESS_SECRET
